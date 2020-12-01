@@ -1,7 +1,7 @@
 # TheMonolithProblem
 
 Trying to solve the Monolith Problem as discussed in the FH Technikum Wien LVA SWA.
-Services are represented as spheres. The dependencies between services are modeled as springs between those services. Let Unity Physics handle the rest.
+Services are represented as spheres. The dependencies between services are modeled as springs between those services. The strength of the spring is defined by the number of dependencies between the services. Let Unity Physics handle the rest.
 
 Let the simulation run until you are happy with the result and hit space.
 The services are clusterd by a kmeans clustering implementation found on github.
