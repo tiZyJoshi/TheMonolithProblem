@@ -5,7 +5,8 @@ Services are represented as spheres. The dependencies between services are model
 
 Let the simulation run until you are happy with the result and hit space.
 The services are clusterd by a kmeans clustering implementation found on github.
-[https://github.com/ogxd/kmeans-clustering-unity](https://github.com/ogxd/kmeans-clustering-unity)
+[https://github.com/ogxd/kmeans-clustering-unity](https://github.com/ogxd/kmeans-clustering-unity) 
+and each cluster gets a unique color.
 
 You can add (random) force to each sphere by hitting f
 Hitting c will calculate clusters and add the same amount of (random) force to each member of a cluster
