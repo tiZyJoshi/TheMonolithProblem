@@ -36,7 +36,7 @@ public class DataLoader : MonoBehaviour
             {
                 var position = new Vector3((index / side * 10) - side * 5f , (index % side * 10) - side * 5f);
                 var service = Instantiate(ServicePrefab, position, Quaternion.identity);
-                //service.GetComponent<Rigidbody>().AddForce(Random.insideUnitSphere * 10);
+                service.GetComponent<Rigidbody>().AddForce(Random.insideUnitSphere * 10);
                 return service;
             })
             .Select(go => go.GetComponent<ServiceContainer>())
@@ -58,7 +58,7 @@ public class DataLoader : MonoBehaviour
         {
             foreach (var serviceContainer in ServiceContainer)
             {
-                serviceContainer.gameObject.GetComponent<Rigidbody>().AddForce(Random.insideUnitSphere.normalized * 0.1f);
+                serviceContainer.gameObject.GetComponent<Rigidbody>().AddForce(Random.insideUnitSphere.normalized);
             }
             return;
         }
