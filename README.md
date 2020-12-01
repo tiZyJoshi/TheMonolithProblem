@@ -8,7 +8,7 @@ The services are clusterd by a kmeans clustering implementation found on github.
 [https://github.com/ogxd/kmeans-clustering-unity](https://github.com/ogxd/kmeans-clustering-unity) 
 and each cluster gets a unique color.
 
-You can add (random) force to each sphere by hitting f
+You can add (random) force to each sphere by hitting f. 
 Hitting c will calculate clusters and add the same amount of (random) force to each member of a cluster
 (Once, this worked, currently, it does not)
 
@@ -31,6 +31,8 @@ Ideas for improvement:
 + Use a better method to find initial service positions and velocities
 + I feel like the springs are way too strong right now
 + Use a second collider to try and drive services away from each other
++ find better parameters for the kmeans clustering algorithm. Obvious clusters shouldnt be separated like on the second to last screenshot. 
++ The number of clusters currently can be defined by the user in the Unity Editor. This is a hard set value and should probably be more dynamic for better results.
 + Use dots/ecs/jobs... for performance
 + Use a computeshader for performance
 + when the performance is no issue, implement more complex springs :)
