@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class DataLoader : MonoBehaviour
 {
@@ -31,11 +32,15 @@ public class DataLoader : MonoBehaviour
         var side = (int)Math.Ceiling(Math.Sqrt(Services.Count));
 
         ServiceContainer = Services
-            .Select((_, index) => Instantiate(ServicePrefab, new Vector3(index/side, index%side), Quaternion.identity))
+            .Select((_, index) =>
+            {
+                var position = new Vector3((index / side * 10) - side * 5f , (index % side * 10) - side * 5f);
+                var service = Instantiate(ServicePrefab, position, Quaternion.identity);
+                //service.GetComponent<Rigidbody>().AddForce(Random.insideUnitSphere * 10);
+                return service;
+            })
             .Select(go => go.GetComponent<ServiceContainer>())
             .ToList();
-
-        
 
         for (var i = 0; i < Services.Count; i++)
         {
@@ -49,6 +54,30 @@ public class DataLoader : MonoBehaviour
     private bool clusterized = false;
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            foreach (var serviceContainer in ServiceContainer)
+            {
+                serviceContainer.gameObject.GetComponent<Rigidbody>().AddForce(Random.insideUnitSphere.normalized * 0.1f);
+            }
+            return;
+        }
+        
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            var itemsTmp = ServiceContainer.Select(c => c.transform.position).ToArray();
+            var resultTmp = KMeans.Cluster(itemsTmp, ClusterCount, Iterations, 0);
+            foreach (var cluster in resultTmp.clusters)
+            {
+                var force = Random.insideUnitSphere;
+                foreach (var index in cluster)
+                {
+                    ServiceContainer[index].gameObject.GetComponent<Rigidbody>().AddForce(force);
+                }
+            }
+            return;
+        }
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
             if (running)
