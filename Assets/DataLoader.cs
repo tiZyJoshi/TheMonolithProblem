@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
@@ -72,7 +70,6 @@ public class DataLoader : MonoBehaviour
         var items = ServiceContainer.Select(c => c.transform.position).ToArray();
         var result = KMeans.Cluster(items, ClusterCount, Iterations, 0);
 
-        Gizmos.color = Color.yellow;
         for (var i = 0; i < result.clusters.Length; i++)
         {
             var color = Color.HSVToRGB(1f * i / result.clusters.Length, 1f, 1f);
@@ -80,37 +77,10 @@ public class DataLoader : MonoBehaviour
             {
                 var index = result.clusters[i][j];
                 ServiceContainer[index].GetComponent<MeshRenderer>().material.color = color;
-
-                //Gizmos.DrawSphere(data[result.clusters[i][j]], 0.1f);
-                //GizmosUtils.DrawText(GUI.skin, i.ToString(), items[result.clusters[i][j]], Gizmos.color, 10);
             }
         }
 
         clusterized = true;
-    }
-
-    void OnDrawGizmos()
-    {
-        if (running)
-        {
-            return;
-        }
-
-        var items = ServiceContainer.Select(c => c.transform.position).ToArray();
-        var result = KMeans.Cluster(items, ClusterCount, Iterations, 0);
-
-        Gizmos.color = Color.yellow;
-        for (var i = 0; i < result.clusters.Length; i++)
-        {
-            var color = Color.HSVToRGB(1f * i / result.clusters.Length, 1f, 1f);
-            //color.a = 0.5f;
-            Gizmos.color = color;
-            for (var j = 0; j < result.clusters[i].Length; j++)
-            {
-                //Gizmos.DrawSphere(data[result.clusters[i][j]], 0.1f);
-                GizmosUtils.DrawText(GUI.skin, i.ToString(), items[result.clusters[i][j]], Gizmos.color, 10);
-            }
-        }
     }
 }
 
