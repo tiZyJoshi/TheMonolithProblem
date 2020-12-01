@@ -7,6 +7,10 @@ Let the simulation run until you are happy with the result and hit space.
 The services are clusterd by a kmeans clustering implementation found on github.
 [https://github.com/ogxd/kmeans-clustering-unity](https://github.com/ogxd/kmeans-clustering-unity)
 
+You can add (random) force to each sphere by hitting f
+Hitting c will calculate clusters and add the same amount of (random) force to each member of a cluster
+(Once, this worked, currently, it does not)
+
 # Screenshots:
 
 ![alt text](https://github.com/tiZyJoshi/TheMonolithProblem/blob/main/Screenshots/Screenshot%202020-12-01%20225332.png "")
