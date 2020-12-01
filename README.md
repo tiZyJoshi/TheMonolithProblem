@@ -14,3 +14,18 @@ The services are clusterd by a kmeans clustering implementation found on github.
 ![alt text](https://github.com/tiZyJoshi/TheMonolithProblem/blob/main/Screenshots/Screenshot%202020-12-01%20225437.png "")
 ![alt text](https://github.com/tiZyJoshi/TheMonolithProblem/blob/main/Screenshots/Screenshot%202020-12-01%20230639.png "")
 ![alt text](https://github.com/tiZyJoshi/TheMonolithProblem/blob/main/Screenshots/Screenshot%202020-12-01%20231248.png "")
+
+# Notes
+
+This is by no means a very good implementation of the idea. It's a prototype to see if it could work and what it would take to implement this in a more serious fashion.
+Current answers: "maybe" and "a lot of optimizing springs and the rest of the simulation parameters".
+
+Ideas for improvement:
++ evaluate how the service data is mapped to the springs and find a better model.
++ Use different springs for better modellation possibilities of the different dependencies. Currently they only pull and have some dampening (pretty much unity Spring Joint defaults [https://docs.unity3d.com/Manual/class-SpringJoint.html])
++ Use a better method to find initial service positions and velocities
++ I feel like the springs are way too strong right now
++ Use a second collider to try and drive services away from each other
++ Use dots/ecs/jobs... for performance
++ Use a computeshader for performance
++ when the performance is no issue, implement more complex springs :)
