@@ -25,9 +25,11 @@ Hitting c will calculate clusters and add the same amount of (random) force to e
 This is by no means a very good implementation of the idea. It's a prototype to see if it could work and what it would take to implement this in a more serious fashion.
 Current answers: "maybe" and "a lot of optimizing springs and the rest of the simulation parameters".
 
+Also see https://github.com/tiZyJoshi/ExcelDataLoader for xlsx to xml conversion.
+
 Ideas for improvement:
 + evaluate how the service data is mapped to the springs and find a better model.
-+ Use different springs for better modellation possibilities of the different dependencies. Currently they only pull and have some dampening (pretty much unity Spring Joint defaults [https://docs.unity3d.com/Manual/class-SpringJoint.html])
++ Use different springs for better modellation possibilities of the different dependencies. Currently they only pull and have some dampening (pretty much unity Spring Joint defaults https://docs.unity3d.com/Manual/class-SpringJoint.html)
 + Use a better method to find initial service positions and velocities
 + I feel like the springs are way too strong right now
 + Use a second collider to try and drive services away from each other
