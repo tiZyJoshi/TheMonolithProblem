@@ -38,3 +38,7 @@ Ideas for improvement:
 + Use dots/ecs/jobs... for performance
 + Use a computeshader for performance
 + when the performance is no issue, implement more complex springs :)
+
+# Thanks
+
+to Robert Hofmann for valuable input
