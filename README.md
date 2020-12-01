@@ -22,7 +22,7 @@ Hitting c will calculate clusters and add the same amount of (random) force to e
 
 # Notes
 
-This is by no means a very good implementation of the idea. It's a prototype to see if it could work and what it would take to implement this in a more serious fashion.
+This is by no means a very good or correct implementation of the idea. It's a prototype to see if it could work and what it would take to implement this in a more serious fashion.
 Current answers: "maybe" and "a lot of optimizing springs and the rest of the simulation parameters".
 
 Also see https://github.com/tiZyJoshi/ExcelDataLoader for xlsx to xml conversion (original data was in xlsx format)
