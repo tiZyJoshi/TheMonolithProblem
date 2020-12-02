@@ -31,7 +31,7 @@ Ideas for improvement:
 + evaluate how the service data is mapped to the springs and find a better model.
 + Use different springs for better modellation possibilities of the different dependencies. Currently they only pull and have some dampening (pretty much unity Spring Joint defaults https://docs.unity3d.com/Manual/class-SpringJoint.html)
 + Use a better method to find initial service positions and velocities
-+ better data = better results => I think you could improve the data a lot by adding a few data entries in the original data tables. Eg: Common Changes in relation to total changes. Currently, there are 60K dataentries regarding common changes, but 40k of them have 1 common change and another 10k or so have 2. For performance reasons I ignored those, but this can hide huge dependencies in rarely changed code.
++ better data = better results => I think you could improve the data a lot by adding a few data entries in the original data tables. Eg: Common Changes in relation to total changes. Currently, there are 60K dataentries regarding common changes, but 40k of them have 1 common change and another 10k or so have 2. For performance reasons I ignored those, but this can hide huge dependencies in rarely changed code. (Not, that this matters too much in this example)
 + I feel like the springs are way too strong right now
 + Use a second collider to try and drive services away from each other
 + find better parameters for the kmeans clustering algorithm. Obvious clusters shouldnt be separated like on the second to last screenshot. 
