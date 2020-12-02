@@ -35,6 +35,7 @@ Ideas for improvement:
 + I feel like the springs are way too strong right now
 + Use a second collider to try and drive services away from each other
 + find better parameters for the kmeans clustering algorithm. Obvious clusters shouldnt be separated like on the second to last screenshot. 
++ find better ways to interact with the "net". Add support to grab a service and pin it to a position. Add support to shoot the net to add random force to it. When was the last time you developed software architectures while shooting the rocket launcher?
 + The number of clusters currently can be defined by the user in the Unity Editor. This is a hard set value and should probably be more dynamic for better results.
 + Use dots/ecs/jobs... for performance
 + Use a computeshader for performance
