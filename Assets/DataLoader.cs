@@ -12,6 +12,7 @@ public class DataLoader : MonoBehaviour
 
     public int ClusterCount = 10;
     public int Iterations = 100;
+    public float ForceScale = 10.0f;
 
     private List<Service> Services;
     private List<ServiceContainer> ServiceContainer;
@@ -23,20 +24,29 @@ public class DataLoader : MonoBehaviour
         using (var reader = new FileStream("Assets/data.xml", FileMode.Open))
         {
             Services = serializer.Deserialize(reader) as List<Service>;
+            reader.Close();
         }
         if (Services is null)
         {
             throw new InvalidOperationException();
         }
 
-        var side = (int)Math.Ceiling(Math.Sqrt(Services.Count));
+        var serviceIndexDictionary = Services
+            .Select((service, index) => (service, index))
+            .Where(s => s.service.Calling.Count != 0 || s.service.CalledBy.Count != 0 || s.service.CommonChanges.Count != 0)
+            .Select((s, index) => (index, s))
+            .ToDictionary(s => s.s.index, s => s.index);
+
+
+
+        var side = (float)Math.Ceiling(Math.Sqrt(Services.Count));
 
         ServiceContainer = Services
-            .Select((_, index) =>
+            .Select((s, index) =>
             {
-                var position = new Vector3((index / side * 10) - side * 5f , (index % side * 10) - side * 5f);
-                var service = Instantiate(ServicePrefab, position, Quaternion.identity);
-                service.GetComponent<Rigidbody>().AddForce(Random.insideUnitSphere * 10);
+                var position = new Vector3((index / side * 10f) - side * 5f , (index % side * 10f) - side * 5f);
+                var service = Instantiate(ServicePrefab, Vector3.zero, Quaternion.identity);
+                service.GetComponent<Rigidbody>().AddForce(Random.onUnitSphere * 10000);
                 return service;
             })
             .Select(go => go.GetComponent<ServiceContainer>())
@@ -58,7 +68,7 @@ public class DataLoader : MonoBehaviour
         {
             foreach (var serviceContainer in ServiceContainer)
             {
-                serviceContainer.gameObject.GetComponent<Rigidbody>().AddForce(Random.insideUnitSphere.normalized);
+                serviceContainer.gameObject.GetComponent<Rigidbody>().AddForce(Random.onUnitSphere * ForceScale);
             }
             return;
         }
@@ -69,7 +79,7 @@ public class DataLoader : MonoBehaviour
             var resultTmp = KMeans.Cluster(itemsTmp, ClusterCount, Iterations, 0);
             foreach (var cluster in resultTmp.clusters)
             {
-                var force = Random.insideUnitSphere;
+                var force = Random.onUnitSphere * ForceScale;
                 foreach (var index in cluster)
                 {
                     ServiceContainer[index].gameObject.GetComponent<Rigidbody>().AddForce(force);

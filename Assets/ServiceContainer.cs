@@ -9,24 +9,28 @@ public class ServiceContainer : MonoBehaviour
     public void Init(Service service, List<ServiceContainer> serviceContainer)
     {
         Name = service.Name;
-
-        
+        var hasDeps = service.Calling.Count != 0 || service.CalledBy.Count != 0 || service.CommonChanges.Count != 0;
+        if (!hasDeps)
+        {
+            //Destroy(gameObject);
+            return;
+        }
 
         foreach (var (index, number) in service.Calling)
         {
-            AddSpring(index, number, serviceContainer, 0.01f);
+            AddSpring(index, number, serviceContainer, 1.0f);
         }
         foreach (var (index, number) in service.CalledBy)
         {
-            //AddSpring(index, number, serviceContainer, 1.0f);
+            AddSpring(index, number, serviceContainer, 1.0f);
         }
         foreach (var (index, number) in service.CommonChanges)
         {
-            AddSpring(index, number, serviceContainer, 0.01f);
+            AddSpring(index, number, serviceContainer, 1.0f);
         }
     }
     
-    private void AddSpring(int index, int number, List<ServiceContainer> serviceContainer, float factor)
+    private void AddSpring(int index, int number, IReadOnlyList<ServiceContainer> serviceContainer, float factor)
     {
         var spring = gameObject.AddComponent<SpringJoint>();
         spring.autoConfigureConnectedAnchor = false;
@@ -40,9 +44,9 @@ public class ServiceContainer : MonoBehaviour
     void OnCollisionEnter(Collision collision)
     {
         //Check for a match with the specified name on any GameObject that collides with your GameObject
-        if (collision.gameObject.GetComponent<ServiceContainer>())
-        {
-            collision.gameObject.GetComponent<Rigidbody>().AddForce(-collision.relativeVelocity.normalized * 10f);
-        }
+        //if (collision.gameObject.GetComponent<ServiceContainer>())
+        //{
+        //    collision.gameObject.GetComponent<Rigidbody>().AddForce(-collision.relativeVelocity.normalized * 10f);
+        //}
     }
 }
