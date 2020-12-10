@@ -56,6 +56,7 @@ public class ServiceContainer : MonoBehaviour
             var currentForce = spring.currentForce;
             lineRenderer.startColor = new Color(currentForce.x, currentForce.y, currentForce.z, 1.0f);
             lineRenderer.endColor = new Color(currentForce.x, currentForce.y, currentForce.z, 1.0f);
+            lineRenderer.widthMultiplier = 0.1f;
         }
     }
 
