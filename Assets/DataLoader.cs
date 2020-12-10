@@ -8,17 +8,18 @@ using Random = UnityEngine.Random;
 
 public class DataLoader : MonoBehaviour
 {
-    public GameObject ServicePrefab;
+    public ServiceContainer ServicePrefab;
+    public LineRenderer LineRendererPrefab;
 
     public int ClusterCount = 10;
     public int Iterations = 100;
     public float ForceScale = 10.0f;
 
     private List<Service> Services;
-    private List<ServiceContainer> ServiceContainer;
+    private List<ServiceContainer> ServiceContainers;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         var serializer = new XmlSerializer(typeof(List<Service>));
         using (var reader = new FileStream("Assets/data.xml", FileMode.Open))
@@ -31,31 +32,16 @@ public class DataLoader : MonoBehaviour
             throw new InvalidOperationException();
         }
 
-        var serviceIndexDictionary = Services
-            .Select((service, index) => (service, index))
-            .Where(s => s.service.Calling.Count != 0 || s.service.CalledBy.Count != 0 || s.service.CommonChanges.Count != 0)
-            .Select((s, index) => (index, s))
-            .ToDictionary(s => s.s.index, s => s.index);
-
-
-
-        var side = (float)Math.Ceiling(Math.Sqrt(Services.Count));
-
-        ServiceContainer = Services
-            .Select((s, index) =>
-            {
-                var position = new Vector3((index / side * 10f) - side * 5f , (index % side * 10f) - side * 5f);
-                var service = Instantiate(ServicePrefab, Vector3.zero, Quaternion.identity);
-                service.GetComponent<Rigidbody>().AddForce(Random.onUnitSphere * 10000);
-                return service;
-            })
-            .Select(go => go.GetComponent<ServiceContainer>())
+        ServiceContainers = Services
+            .Select((s, index) => Instantiate(ServicePrefab))
             .ToList();
 
         for (var i = 0; i < Services.Count; i++)
         {
-            ServiceContainer[i].Init(Services[i], ServiceContainer);
+            ServiceContainers[i].Init(Services[i], ServiceContainers, LineRendererPrefab);
         }
+
+        ServiceContainers.Explode(1000.0f);
     }
 
     // Update is called once per frame
@@ -66,26 +52,29 @@ public class DataLoader : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.F))
         {
-            foreach (var serviceContainer in ServiceContainer)
-            {
-                serviceContainer.gameObject.GetComponent<Rigidbody>().AddForce(Random.onUnitSphere * ForceScale);
-            }
+            ServiceContainers.Explode(ForceScale);
             return;
         }
         
         if (Input.GetKeyDown(KeyCode.C))
         {
-            var itemsTmp = ServiceContainer.Select(c => c.transform.position).ToArray();
+            var itemsTmp = ServiceContainers.Select(c => c.transform.position).ToArray();
             var resultTmp = KMeans.Cluster(itemsTmp, ClusterCount, Iterations, 0);
             foreach (var cluster in resultTmp.clusters)
             {
                 var force = Random.onUnitSphere * ForceScale;
-                foreach (var index in cluster)
-                {
-                    ServiceContainer[index].gameObject.GetComponent<Rigidbody>().AddForce(force);
-                }
+                cluster.Select(i => ServiceContainers[i]).AddForce(force);
             }
             return;
+        }
+
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            foreach (var spring in ServiceContainers.SelectMany(s => s.gameObject.GetComponents<SpringJoint>()))
+            {
+                spring.maxDistance = 3.0f;
+                spring.damper = 1.0f;
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
@@ -106,7 +95,7 @@ public class DataLoader : MonoBehaviour
 
         if (running || clusterized) return;
 
-        var items = ServiceContainer.Select(c => c.transform.position).ToArray();
+        var items = ServiceContainers.Select(c => c.transform.position).ToArray();
         var result = KMeans.Cluster(items, ClusterCount, Iterations, 0);
 
         for (var i = 0; i < result.clusters.Length; i++)
@@ -115,18 +104,56 @@ public class DataLoader : MonoBehaviour
             for (var j = 0; j < result.clusters[i].Length; j++)
             {
                 var index = result.clusters[i][j];
-                ServiceContainer[index].GetComponent<MeshRenderer>().material.color = color;
+                ServiceContainers[index].GetComponent<MeshRenderer>().material.color = color;
             }
         }
 
         clusterized = true;
+    }
+
+    void OnDrawGizmos()
+    {
+        // Draw a yellow sphere at the transform's position
+        Gizmos.color = Color.blue;
+        if (ServiceContainers is null)
+        {
+            return;
+        }
+
+        foreach (var serviceContainer in ServiceContainers)
+        {
+            foreach (var spring in serviceContainer.GetComponents<SpringJoint>())
+            {
+                if (spring != null)
+                {
+                    Gizmos.DrawLine(spring.gameObject.transform.position, spring.connectedBody.position);
+                }
+            }
+        }
     }
 }
 
 public class Service
 {
     public string Name { get; set; }
-    public List<(int index, int number)> Calling { get; set; }
-    public List<(int index, int number)> CalledBy { get; set; }
-    public List<(int index, int number)> CommonChanges { get; set; }
+    public List<(int index, int number)> Dependencies { get; set; }
+}
+
+public static class ServicesExtensions
+{
+    public static void Explode(this IEnumerable<ServiceContainer> serviceContainers, float force)
+    {
+        foreach (var serviceContainer in serviceContainers)
+        {
+            serviceContainer.AddForce(Random.onUnitSphere * force);
+        }
+    }
+
+    public static void AddForce(this IEnumerable<ServiceContainer> serviceContainers, Vector3 force)
+    {
+        foreach (var serviceContainer in serviceContainers)
+        {
+            serviceContainer.AddForce(force);
+        }
+    }
 }
