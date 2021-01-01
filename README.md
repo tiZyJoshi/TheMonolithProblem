@@ -12,6 +12,10 @@ You can add (random) force to each sphere by hitting f.
 Hitting c will calculate clusters and add the same amount of (random) force to each member of a cluster
 (Once, this worked, currently, it does not)
 
+# Gephi
+
+Checkout https://github.com/gephi/gephi !
+
 # Screenshots:
 
 ![alt text](https://github.com/tiZyJoshi/TheMonolithProblem/blob/main/Screenshots/Screenshot%202020-12-01%20225332.png "")
