@@ -14,7 +14,9 @@ Hitting c will calculate clusters and add the same amount of (random) force to e
 
 # Gephi
 
-Checkout https://github.com/gephi/gephi !
+Check out https://github.com/gephi/gephi 
+
+Gephi is a finished and quite powerful implementation of this exact method with lots of features that might be interesting. Eg Modularity Class Community Detection Algorithm. This algorithm is way better suited to clusterize the nodes, since by design it tries to find clusters with high cohesion and low coupling to other clusters.
 
 # Screenshots:
 
